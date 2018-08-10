@@ -1,0 +1,12 @@
+# exclude everything
+DATA/*
+NP_DATA/*
+RESULTS/*
+__pycache__/*
+*.pyc
+
+
+# exception to the rule
+!DATA/.gitkeep
+!NP_DATA/.gitkeep
+!RESULTS/.gitkeep
