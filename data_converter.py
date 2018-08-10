@@ -18,11 +18,11 @@ Files with higher 'frame_id' are saved with '_ES' ending.
 
 tr_input_path = TRAIN_DIR
 tr_output_path = NP_TRAIN_DIR
-tr_range = (1,100)
+tr_range = (1,101)
 
 ev_input_path = TEST_DIR
 ev_output_path = NP_TEST_DIR
-ev_range = (101,150)
+ev_range = (101,151)
 
 dataset_names = ['train', 'train_gt', 'test']
 
