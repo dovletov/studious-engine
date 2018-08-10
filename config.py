@@ -10,3 +10,4 @@ NP_TRAIN_DIR = os.path.join(NP_DIR, 'training')
 NP_TEST_DIR = os.path.join(NP_DIR, 'testing')
 
 RESULTS_DIR = os.path.join(BASE_DIR, 'RESULTS')
+colors = ["white","red", "green", "blue"]
