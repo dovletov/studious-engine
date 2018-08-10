@@ -68,3 +68,53 @@ def resizedArray(array, height, width, output_mode):
             resized_array[sl,:,:,0] = resizedSlice(data_slice, height, width)
 
     return resized_array
+
+def getRandSlices(subset_name):
+    """
+    Returns randoms slice for image and corresponding GT image.
+    """
+    mode = random.randint(0, 1)
+    if subset_name == 'tr':
+        pid = random.randint(1,80)
+    elif subset_name == 'vl':
+        pid = random.randint(81,100)
+
+    if mode == 0:
+        x_name = 'patient' + str(pid).zfill(3)+'_ED.hdf5'
+        y_name = 'patient' + str(pid).zfill(3)+'_ED_gt.hdf5'
+    else:
+        x_name = 'patient' + str(pid).zfill(3)+'_ES.hdf5'
+        y_name = 'patient' + str(pid).zfill(3)+'_ES_gt.hdf5'
+
+    x = loadFromHdf5(NP_TRAIN_DIR, x_name, 'train')
+    y_ = loadFromHdf5(NP_TRAIN_DIR, y_name, 'train_gt')
+
+    depth = x.shape[0]
+    sid = random.randint(0,depth-1)
+
+    return x[sid,:,:], y_[sid,:,:]
+def formRandBatch(batch_size, height, width, subset_name):
+    """
+    Forms BHW1 image batch and corresponding BHW GT batch.
+    """
+    x_batch, y_batch = getRandSlices(subset_name=subset_name)
+    if batch_size > 1:
+        x_batch = resizedSlice(x_batch, height, width)
+        y_batch = resizedSlice(y_batch, height, width)
+        
+        # add B axe
+        x_batch = np.expand_dims(x_batch, 0)
+        y_batch = np.expand_dims(y_batch, 0)
+    
+        for i in range(batch_size-1):
+            x, y = getRandSlices(subset_name=subset_name)
+            x = resizedSlice(x, height, width)
+            y = resizedSlice(y, height, width)
+            x = np.expand_dims(x,0)
+            y = np.expand_dims(y,0)
+            x_batch = np.concatenate((x_batch, x), axis=0)
+            y_batch = np.concatenate((y_batch, y), axis=0)
+
+        x_batch = np.expand_dims(x_batch, 3)
+
+    return x_batch, y_batch
