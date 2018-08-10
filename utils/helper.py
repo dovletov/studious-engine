@@ -43,3 +43,28 @@ def printShapes():
         filename = 'patient'+str(i).zfill(3)+'_ES.hdf5'
         x = loadFromHdf5(NP_TEST_DIR, filename, 'test')
         print('File: %s shape: %s' % (filename, str(x.shape)))
+
+def resizedSlice(data_slice, height, width):
+    """
+    """
+    resized_slice = cv.resize(data_slice, (height, width), 
+        interpolation = cv.INTER_CUBIC)
+    
+    return resized_slice
+def resizedArray(array, height, width, output_mode):
+    """
+    """
+    depth = array.shape[0]
+    if output_mode == 'DHW':
+        resized_array = np.zeros((depth, height, width))
+        for sl in range(depth):
+            data_slice = array[sl,:,:]
+            resized_array[sl,:,:] = resizedSlice(data_slice, height, width)
+    
+    elif output_mode =='DHW1':
+        resized_array = np.zeros((depth, height, width, 1))
+        for sl in range(depth):
+            data_slice = array[sl,:,:]
+            resized_array[sl,:,:,0] = resizedSlice(data_slice, height, width)
+
+    return resized_array
