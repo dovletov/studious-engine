@@ -4,6 +4,7 @@ import h5py
 import numpy as np
 import random
 import cv2 as cv
+from scipy.ndimage import zoom
 
 
 def saveToHdf5(data, dataset_name, save_path, filename):
@@ -139,5 +140,63 @@ def formRandBatch(batch_size, height, width, subset_name):
             y_batch = np.concatenate((y_batch, y), axis=0)
 
         x_batch = np.expand_dims(x_batch, 3)
+
+    return x_batch, y_batch
+
+def getRandVolume(subset_name):
+    """
+    Returns random image volume and corresponding GT volume.
+    """
+    mode = random.randint(0, 1)
+    if subset_name == 'tr':
+        pid = random.randint(1,80)
+    elif subset_name == 'vl':
+        pid = random.randint(81,100)
+
+    if mode == 0:
+        x_name = 'patient' + str(pid).zfill(3)+'_ED.hdf5'
+        y_name = 'patient' + str(pid).zfill(3)+'_ED_gt.hdf5'
+    else:
+        x_name = 'patient' + str(pid).zfill(3)+'_ES.hdf5'
+        y_name = 'patient' + str(pid).zfill(3)+'_ES_gt.hdf5'
+
+    x = loadFromHdf5(NP_TRAIN_DIR, x_name, 'train')
+    y_ = loadFromHdf5(NP_TRAIN_DIR, y_name, 'train_gt')
+
+    return x, y_
+def resizedVolume(volume, depth, height, width):
+    """
+    """
+    z, x, y = volume.shape
+    fz = depth / z
+    fx = height / x
+    fy = width / y
+
+    resizedVolume = zoom(volume, (fz, fx, fy))
+
+    return resizedVolume
+def formRand3DBatch(batch_size, depth, height, width, subset_name):
+    """
+    Forms NDHWC (C=1) image batch and corresponding NDHW GT batch.
+    """
+    x_batch, y_batch = getRandVolume(subset_name=subset_name)
+    if batch_size > 1:
+        x_batch = resizedVolume(x_batch, depth, height, width)
+        y_batch = resizedVolume(y_batch, depth, height, width)
+        
+        # add N axe
+        x_batch = np.expand_dims(x_batch, 0)
+        y_batch = np.expand_dims(y_batch, 0)
+    
+        for i in range(batch_size-1):
+            x, y = getRandVolume(subset_name=subset_name)
+            x = resizedVolume(x, depth, height, width)
+            y = resizedVolume(y, depth, height, width)
+            x = np.expand_dims(x,0)
+            y = np.expand_dims(y,0)
+            x_batch = np.concatenate((x_batch, x), axis=0)
+            y_batch = np.concatenate((y_batch, y), axis=0)
+
+        x_batch = np.expand_dims(x_batch, 4)
 
     return x_batch, y_batch
