@@ -1,6 +1,6 @@
 from config import *
 from utils.helper import *
-from utils.models import unet
+from utils.models import unet3d
 
 import argparse
 from pathlib import Path
