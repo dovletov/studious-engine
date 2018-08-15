@@ -44,13 +44,6 @@ def printShapes():
         x = loadFromHdf5(NP_TEST_DIR, filename, 'test')
         print('File: %s shape: %s' % (filename, str(x.shape)))
 
-def resizedSlice(data_slice, height, width):
-    """
-    """
-    resized_slice = cv.resize(data_slice, (height, width), 
-        interpolation = cv.INTER_CUBIC)
-    
-    return resized_slice
 def resizedArray(array, height, width, output_mode):
     """
     """
@@ -68,7 +61,6 @@ def resizedArray(array, height, width, output_mode):
             resized_array[sl,:,:,0] = resizedSlice(data_slice, height, width)
 
     return resized_array
-
 def getRandSlices(subset_name):
     """
     Returns randoms slice for image and corresponding GT image.
@@ -93,6 +85,13 @@ def getRandSlices(subset_name):
     sid = random.randint(0,depth-1)
 
     return x[sid,:,:], y_[sid,:,:]
+def resizedSlice(data_slice, height, width):
+    """
+    """
+    resized_slice = cv.resize(data_slice, (height, width), 
+        interpolation = cv.INTER_CUBIC)
+    
+    return resized_slice
 def formRandBatch(batch_size, height, width, subset_name):
     """
     Forms BHW1 image batch and corresponding BHW GT batch.
