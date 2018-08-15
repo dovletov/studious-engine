@@ -43,6 +43,30 @@ def printShapes():
         filename = 'patient'+str(i).zfill(3)+'_ES.hdf5'
         x = loadFromHdf5(NP_TEST_DIR, filename, 'test')
         print('File: %s shape: %s' % (filename, str(x.shape)))
+def printMeanShape():
+    """
+    Print mean z,x,y sizes for training dataset.
+    """
+    mx = 0
+    my = 0
+    mz = 0
+    for i in range(1,101):
+        filename = 'patient'+str(i).zfill(3)+'_ED.hdf5'
+        x = loadFromHdf5(NP_TRAIN_DIR, filename, 'train')
+        mz += x.shape[0]
+        mx += x.shape[1]
+        my += x.shape[2]
+        filename = 'patient'+str(i).zfill(3)+'_ES.hdf5'
+        x = loadFromHdf5(NP_TRAIN_DIR, filename, 'train')
+        mz += x.shape[0]
+        mx += x.shape[1]
+        my += x.shape[2]
+    mz = int(mz/200)
+    mx = int(mx/200)
+    my = int(my/200)
+    print("Mean z = %z" % mz)
+    print("Mean x = %z" % mx)
+    print("Mean y = %z" % my)
 
 def resizedArray(array, height, width, output_mode):
     """
