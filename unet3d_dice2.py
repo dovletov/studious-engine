@@ -93,11 +93,11 @@ with tf.Session(config=config) as sess:
 
             print("Step: %s loss_tr: %s loss_vl %s" % (step_id, loss_tr, loss_vl))
 
-            if loss_vl < 0.01:
+            if loss_vl < 0.02:
                 break;
     
     x_ev = loadFromHdf5(NP_TEST_DIR, 'patient101_ED.hdf5', 'test')[1:-1]
-    x_ev = resizeVolume(x_ev, input_d, input_h, input_w)
+    x_ev = resizedVolume(x_ev, input_d, input_h, input_w)
     x_batch_ev = np.expand_dims(x_ev, axis=0)
     x_batch_ev = np.expand_dims(x_batch_ev, axis=4)
 
