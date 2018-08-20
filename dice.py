@@ -64,15 +64,15 @@ y = unet(x)
 prediction = tf.nn.softmax(y)
 
 # loss
-def dice_loss(y_, y):
+def dice_loss(y_, prediction):
     epsilon = tf.constant(0.00001)
     
-    depth = y.get_shape()[3].value
+    depth = prediction.get_shape()[3].value
     one_hot_y_ = tf.one_hot(y_, depth, axis=-1, dtype=tf.float32)
 
-    intersection = tf.reduce_sum(one_hot_y_ * y)
+    intersection = tf.reduce_sum(one_hot_y_ * prediction)
     dice = (2.*intersection+epsilon) / (tf.reduce_sum(one_hot_y_) + \
-        tf.reduce_sum(y)+epsilon)
+        tf.reduce_sum(prediction)+epsilon)
     loss = 1 - dice
 
     return loss
