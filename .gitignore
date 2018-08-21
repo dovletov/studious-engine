@@ -2,11 +2,9 @@
 DATA/*
 NP_DATA/*
 RESULTS/*
-__pycache__/*
+*/__pycache__/*
 *.pyc
 *.txt
 
 # exception to the rule
-!DATA/.gitkeep
-!NP_DATA/.gitkeep
-!RESULTS/.gitkeep
+!*.gitkeep
